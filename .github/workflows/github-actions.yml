@@ -1,0 +1,32 @@
+name: CI - Build and Test
+
+on:
+  pull_request:
+    branches:
+      - '**'  # 모든 브랜치에서 PR이 생성될 때 실행
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]  # Node.js 18.x 및 20.x 버전에서 실행
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build project
+      run: npm run build
+
+    - name: Run tests
+      run: npm run test
